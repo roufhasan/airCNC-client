@@ -1,50 +1,38 @@
-import HeartButton from "../Button/HeartButton";
-
-const Card = () => {
+const Button = ({ label, onClick, disabled, outline, small, icon: Icon }) => {
   return (
-    <div className="col-span-1 cursor-pointer group">
-      <div className="flex flex-col gap-2 w-full">
-        <div
+    <button
+      disabled={disabled}
+      onClick={onClick}
+      className={`
+        relative
+        disabled:opacity-70
+        disabled:cursor-not-allowed
+        rounded-lg
+        hover:opacity-80
+        transition
+        w-full
+        ${outline ? "bg-white" : "bg-rose-500"}
+        ${outline ? "border-black" : "border-rose-500"}
+        ${outline ? "text-black" : "text-white"}
+        ${small ? "text-sm" : "text-md"}
+        ${small ? "py-1" : "py-3"}
+        ${small ? "font-light" : "font-semibold"}
+        ${small ? "border-[1px]" : "border-2"}
+      `}
+    >
+      {Icon && (
+        <Icon
+          size={24}
           className="
-            aspect-square 
-            w-full 
-            relative 
-            overflow-hidden 
-            rounded-xl
-          "
-        >
-          <img
-            className="
-              object-cover 
-              h-full 
-              w-full 
-              group-hover:scale-110 
-              transition
-            "
-            src="https://a0.muscache.com/im/pictures/4f70b681-a792-4530-8c52-f2a8d262942d.jpg"
-            alt="Room"
-          />
-          <div
-            className="
             absolute
+            left-4
             top-3
-            right-3
           "
-          >
-            <HeartButton />
-          </div>
-        </div>
-        <div className="font-semibold text-lg">Sidemen, Indonesia</div>
-        <div className="font-light text-neutral-500">
-          5 nights . June 19 - 26
-        </div>
-        <div className="flex flex-row items-center gap-1">
-          <div className="font-semibold">$ 200</div>
-          <div className="font-light">night</div>
-        </div>
-      </div>
-    </div>
+        />
+      )}
+      {label}
+    </button>
   );
 };
 
-export default Card;
+export default Button;
