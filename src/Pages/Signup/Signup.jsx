@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import { AuthContext } from "../../providers/AuthProvider";
 import { TbFidgetSpinner } from "react-icons/tb";
+import { saveUser } from "../../api/auth";
 
 const SignUp = () => {
   const {
@@ -45,6 +46,8 @@ const SignUp = () => {
             updateUserProfile(name, imgUrl)
               .then(() => {
                 toast.success("Signup Successful");
+                // Save user to DB
+                saveUser(res.user);
                 navigate(from, { replace: true });
               })
               .catch((err) => {
@@ -73,6 +76,8 @@ const SignUp = () => {
     signInWithGoogle()
       .then((res) => {
         console.log(res.user);
+        // Save user to DB
+        saveUser(res.user);
         navigate(from, { replace: true });
       })
       .catch((err) => {

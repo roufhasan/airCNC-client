@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import { AuthContext } from "../../providers/AuthProvider";
 import { TbFidgetSpinner } from "react-icons/tb";
+import { saveUser } from "../../api/auth";
 
 const Login = () => {
   const { loading, setLoading, signIn, signInWithGoogle, resetPassword } =
@@ -36,6 +37,8 @@ const Login = () => {
     signInWithGoogle()
       .then((res) => {
         console.log(res.user);
+        // To Do: Save user to DB
+        saveUser(res.user);
         navigate(from, { replace: true });
       })
       .catch((err) => {
