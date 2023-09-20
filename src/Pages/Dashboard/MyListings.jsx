@@ -1,17 +1,19 @@
-import { getRooms } from "../../api/rooms";
 import RoomDataRow from "../../components/Dashboard/RoomDataRow";
 import EmptyState from "../../components/Shared/EmptyState";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { AuthContext } from "../../providers/AuthProvider";
 import { useContext, useState, useEffect } from "react";
 
 const MyListings = () => {
   const { user } = useContext(AuthContext);
+  const [axiosSecure] = useAxiosSecure();
   const [rooms, setRooms] = useState([]);
 
   const fetchRooms = () => {
-    getRooms(user?.email).then((data) => {
-      setRooms(data);
-    });
+    axiosSecure
+      .get(`/rooms/${user?.email}`)
+      .then((data) => setRooms(data.data))
+      .catch((error) => console.log(error));
   };
 
   useEffect(() => {
