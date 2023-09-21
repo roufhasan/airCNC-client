@@ -6,6 +6,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { updateStatus } from "../../api/bookings";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { ImSpinner9 } from "react-icons/im";
 
 const CheckoutForm = ({ closeModal, bookingInfo }) => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const CheckoutForm = ({ closeModal, bookingInfo }) => {
   const elements = useElements();
   const [cardError, setCardError] = useState("");
   const [clientSecret, setClientSecret] = useState("");
+  const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     // generate client secret and save in state
@@ -62,6 +64,8 @@ const CheckoutForm = ({ closeModal, bookingInfo }) => {
       console.log("[PaymentMethod]", paymentMethod);
     }
 
+    setProcessing(true);
+
     // Confirm Payment
     const { paymentIntent, error: confirmError } =
       await stripe.confirmCardPayment(clientSecret, {
@@ -96,9 +100,13 @@ const CheckoutForm = ({ closeModal, bookingInfo }) => {
                 const text = `Booking Successful!, TransactionId: ${paymentIntent.id}`;
                 toast.success(text);
                 navigate("/dashboard/my-bookings");
+                setProcessing(false);
                 closeModal();
               })
-              .catch((err) => console.log(err));
+              .catch((err) => {
+                setProcessing(false);
+                console.log(err);
+              });
           }
         });
       }
@@ -128,7 +136,7 @@ const CheckoutForm = ({ closeModal, bookingInfo }) => {
         <div className="flex mt-2 justify-around">
           <button
             type="submit"
-            disabled={!stripe}
+            disabled={!stripe || processing || !clientSecret}
             className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
             onClick={closeModal}
           >
@@ -138,7 +146,11 @@ const CheckoutForm = ({ closeModal, bookingInfo }) => {
             type="submit"
             className="inline-flex justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
-            Pay {bookingInfo.price}$
+            {processing ? (
+              <ImSpinner9 className="m-auto animate-spin" size={24} />
+            ) : (
+              `Pay ${bookingInfo.price}$`
+            )}
           </button>
         </div>
       </form>
