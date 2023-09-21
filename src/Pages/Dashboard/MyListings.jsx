@@ -3,7 +3,7 @@ import RoomDataRow from "../../components/Dashboard/RoomDataRow";
 import EmptyState from "../../components/Shared/EmptyState";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { AuthContext } from "../../providers/AuthProvider";
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 
 const MyListings = () => {
   const { user, loading } = useContext(AuthContext);
